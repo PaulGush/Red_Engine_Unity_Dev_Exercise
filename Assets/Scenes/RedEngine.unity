@@ -619,8 +619,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f4231a822a1c0b4793ddf66ffed6048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_sceneManager: {fileID: 1460237347}
   m_connectionPrefab: {fileID: 4829592579645291913, guid: 9342bab717d6de541b0a584005542dbe,
     type: 3}
+  m_blueColour: {r: 0.13310246, g: 1.0592737, b: 1.3143868, a: 0}
+  m_pinkColour: {r: 1.4142135, g: 0.26620492, b: 0.59896106, a: 0}
+  m_blueConnectionCount: 0
+  m_pinkConnectionCount: 0
 --- !u!4 &1557286300
 Transform:
   m_ObjectHideFlags: 0

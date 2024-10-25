@@ -352,7 +352,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ada823ab8ddb644dab68423d5d3a606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_electricArc: {fileID: 1755686279170186892}
   m_target: {fileID: 0}
+  m_positions:
+  - {fileID: 3752147591551471677}
+  - {fileID: 3180763132262823990}
+  - {fileID: 4079380043093950244}
+  - {fileID: 2499173059092071497}
 --- !u!1 &8185195988951152831
 GameObject:
   m_ObjectHideFlags: 0

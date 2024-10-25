@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5ec98e94632fd44be02bbcce624ab6, type: 3}
   m_Name: Blue 1
   m_EditorClassIdentifier: 
-  position: {x: -4.1, y: 0, z: -9}
+  position: {x: -4.1, y: 0.2, z: -9}
   puckColour: 1

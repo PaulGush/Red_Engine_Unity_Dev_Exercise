@@ -1,15 +1,20 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace RedEngine
 {
     public class ConnectionManager : MonoBehaviour
     {
+        [SerializeField] private SceneManager m_sceneManager;
         [SerializeField] private GameObject m_connectionPrefab;
 
-        private int m_blueConnectionCount = 0;
-        private int m_pinkConnectionCount = 0;
+        [SerializeField, ColorUsage(false, true)] private Color m_blueColour;
+        [SerializeField, ColorUsage(false, true)] private Color m_pinkColour;
+        
+        [SerializeField] private int m_blueConnectionCount = 0;
+        [SerializeField] private int m_pinkConnectionCount = 0;
         
         private List<Connection> m_connections = new List<Connection>();
 
@@ -17,18 +22,21 @@ namespace RedEngine
         {
             Puck.OnAnyTeamColourChanged += Puck_OnAnyTeamColourChanged;
             Puck.OnAnyStatusChanged += Puck_OnAnyStatusChanged;
+            m_sceneManager.OnPucksInitialized += SceneManager_OnPucksInitialized;
         }
         
         private void OnDisable()
         {
             Puck.OnAnyTeamColourChanged -= Puck_OnAnyTeamColourChanged;
             Puck.OnAnyStatusChanged -= Puck_OnAnyStatusChanged;
+            m_sceneManager.OnPucksInitialized -= SceneManager_OnPucksInitialized;
         }
 
         private void OnDestroy()
         {
             Puck.OnAnyTeamColourChanged -= Puck_OnAnyTeamColourChanged;
             Puck.OnAnyStatusChanged -= Puck_OnAnyStatusChanged;
+            m_sceneManager.OnPucksInitialized -= SceneManager_OnPucksInitialized;
         }
         
         private void CheckConnections()
@@ -65,12 +73,15 @@ namespace RedEngine
             }
             
             #endregion
-            SpawnConnections(TeamManager.Instance.BluePucks, m_blueConnectionCount);
-            SpawnConnections(TeamManager.Instance.PinkPucks, m_pinkConnectionCount);
         }
 
-        private void SpawnConnections(List<Puck> puckList, int connectionCount)
+        private void SpawnConnections(List<Puck> puckList, int connectionCount, Color targetColor)
         {
+            if (connectionCount == 0)
+            {
+                return;
+            }
+
             for (int i = 0; i < connectionCount; i++)
             {
                 if (puckList[i].GetComponentInChildren<Connection>())
@@ -80,22 +91,24 @@ namespace RedEngine
                 
                 var temp = i + 1;
                 
-                if (i + 1 >= connectionCount)
+                if (i + 1 == connectionCount)
                 {
                     temp = 0;
                 }
                 
-                SpawnConnection(puckList[temp].transform, puckList[i].transform);
+                SpawnConnection(puckList[temp].transform, puckList[i].transform, targetColor);
             }
         }
 
-        private void SpawnConnection(Transform target, Transform parent)
+        private void SpawnConnection(Transform target, Transform parent, Color targetColor)
         {
             var clone = Instantiate(m_connectionPrefab, parent);
 
             var connection = clone.GetComponent<Connection>();
             
             connection.SetPositions(clone.transform, target);
+            connection.SetArcColor(targetColor);
+            
             m_connections.Add(connection);
         }
 
@@ -107,6 +120,12 @@ namespace RedEngine
         private void Puck_OnAnyStatusChanged(Puck puck)
         {
             CheckConnections();
+        }
+
+        private void SceneManager_OnPucksInitialized()
+        {
+            SpawnConnections(TeamManager.Instance.BluePucks, m_blueConnectionCount, m_blueColour);
+            SpawnConnections(TeamManager.Instance.PinkPucks, m_pinkConnectionCount, m_pinkColour);
         }
     }
 }

@@ -9,13 +9,27 @@ namespace RedEngine
         [SerializeField] private Puck puckPrefab;
         [SerializeField] private Transform puckParent;
         
+        public event Action OnPucksInitialized;
+        
         void Start()
+        {
+            InitialisePucks();
+        }
+
+        private void InitialisePucks()
         {
             foreach (var puckData in puckData)
             {
-	            var puck = Instantiate(puckPrefab, puckData.position, Quaternion.identity, puckParent);
-				puck.SetTeamColour(puckData.puckColour);
-			}
+                SpawnPuck(puckData);
+            }
+            
+            OnPucksInitialized?.Invoke();
+        }
+
+        private void SpawnPuck(PuckData puckData)
+        {
+            var puck = Instantiate(puckPrefab, puckData.position, Quaternion.identity, puckParent);
+            puck.SetTeamColour(puckData.puckColour);
         }
     }
 }

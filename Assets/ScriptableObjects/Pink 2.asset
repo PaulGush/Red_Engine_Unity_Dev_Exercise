@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5ec98e94632fd44be02bbcce624ab6, type: 3}
   m_Name: Pink 2
   m_EditorClassIdentifier: 
-  position: {x: 0, y: 0, z: -20}
+  position: {x: 0, y: 0.2, z: -20}
   puckColour: 0
