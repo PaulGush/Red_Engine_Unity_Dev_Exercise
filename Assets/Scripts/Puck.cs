@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace RedEngine
 {
@@ -12,6 +13,9 @@ namespace RedEngine
 
 		private static MaterialPropertyBlock _propertyBlock;
 		
+		public static Action<Puck> OnAnyTeamColourChanged;
+		public static Action<Puck> OnAnyStatusChanged;
+		
 		private void Awake()
 		{
 			if (_propertyBlock == null)
@@ -19,11 +23,27 @@ namespace RedEngine
 				_propertyBlock = new MaterialPropertyBlock();
 			}
 		}
+
+		private void OnEnable()
+		{
+			OnAnyStatusChanged?.Invoke(this);
+		}
 		
+		private void OnDisable()
+		{
+			OnAnyStatusChanged?.Invoke(this);
+		}
+
+		private void OnDestroy()
+		{
+			OnAnyStatusChanged?.Invoke(this);
+		}
 		public void SetTeamColour(TeamColour colour)
 		{
 			TeamColour = colour;
-
+			
+			OnAnyTeamColourChanged?.Invoke(this);
+			
 			SetPropertyBlock();
 		}
 
@@ -36,5 +56,7 @@ namespace RedEngine
 
 			colourRenderer.SetPropertyBlock(_propertyBlock);
 		}
+
+		
 	}
 }
