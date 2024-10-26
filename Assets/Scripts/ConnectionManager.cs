@@ -111,10 +111,10 @@ namespace RedEngine
             outbound.SetTarget(target);
             
             var clone = Instantiate(m_connectionPrefab, parent);
-
-            var connection = clone.GetComponent<Connection>();
             
             clone.transform.Translate(0,0,1);
+            
+            var connection = clone.GetComponent<Connection>();
             
             connection.SetPositions(clone.transform, target);
             connection.SetArcColor(targetColor);
