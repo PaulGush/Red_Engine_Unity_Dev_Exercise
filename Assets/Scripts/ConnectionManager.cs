@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -96,15 +97,24 @@ namespace RedEngine
                     temp = 0;
                 }
                 
-                SpawnConnection(puckList[temp].transform, puckList[i].transform, targetColor);
+                SpawnConnection(puckList[temp].InboundArcTargetSocket, 
+                    puckList[i].OutboundArcTargetSocket, 
+                    puckList[temp].InboundArcTargetSocket.transform, 
+                    puckList[i].OutboundArcTargetSocket.transform, 
+                    targetColor);
             }
         }
 
-        private void SpawnConnection(Transform target, Transform parent, Color targetColor)
+        private void SpawnConnection(LookAtTarget inbound, LookAtTarget outbound, Transform target, Transform parent, Color targetColor)
         {
+            inbound.SetTarget(parent);
+            outbound.SetTarget(target);
+            
             var clone = Instantiate(m_connectionPrefab, parent);
 
             var connection = clone.GetComponent<Connection>();
+            
+            clone.transform.Translate(0,0,1);
             
             connection.SetPositions(clone.transform, target);
             connection.SetArcColor(targetColor);

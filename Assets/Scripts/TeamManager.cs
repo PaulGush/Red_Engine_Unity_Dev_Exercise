@@ -6,6 +6,9 @@ namespace RedEngine
 {
     public class TeamManager : MonoBehaviour
     {
+        /// <summary>
+        /// Manages the teams that pucks are on
+        /// </summary>
         public static TeamManager Instance;
         
         public List<Puck> BluePucks = new List<Puck>();

@@ -18,6 +18,7 @@ namespace RedEngine
             m_target = target;
             m_positions[3].position = target.position;
             m_positions[3].SetParent(target, true);
+            m_positions[3].Translate(0,0,1);
         }
 
         public void SetArcColor(Color newColor)

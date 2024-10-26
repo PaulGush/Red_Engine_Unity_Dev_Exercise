@@ -5,6 +5,9 @@ namespace RedEngine
 {
 	public class Puck : MonoBehaviour
 	{
+		public LookAtTarget InboundArcTargetSocket;
+		public LookAtTarget OutboundArcTargetSocket;
+		
 		[SerializeField] private MeshRenderer colourRenderer;
 		[SerializeField, ColorUsage(false, true)] private Color blueColour;
 		[SerializeField, ColorUsage(false, true)] private Color pinkColour;
@@ -15,7 +18,8 @@ namespace RedEngine
 		
 		public static Action<Puck> OnAnyTeamColourChanged;
 		public static Action<Puck> OnAnyStatusChanged;
-		
+		private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
+
 		private void Awake()
 		{
 			if (_propertyBlock == null)
@@ -52,11 +56,9 @@ namespace RedEngine
 			colourRenderer.GetPropertyBlock(_propertyBlock);
 
 			var colour = TeamColour == TeamColour.Blue ? blueColour : pinkColour;
-			_propertyBlock.SetColor("_BaseColor", colour);
+			_propertyBlock.SetColor(BaseColor, colour);
 
 			colourRenderer.SetPropertyBlock(_propertyBlock);
 		}
-
-		
 	}
 }
