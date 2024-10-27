@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace RedEngine
 {
+	[SelectionBase]
 	public class Puck : MonoBehaviour
 	{
 		public LookAtTarget InboundArcTargetSocket;
