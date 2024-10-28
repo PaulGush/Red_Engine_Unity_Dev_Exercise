@@ -59,6 +59,9 @@ VisualEffect:
       - m_Value: 0.025
         m_Name: SparksRadius
         m_Overridden: 1
+      - m_Value: 0.2
+        m_Name: Thickness
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -79,6 +82,9 @@ VisualEffect:
       m_Array:
       - m_Value: {x: 0, y: 7.8699646, z: 32, w: 1}
         m_Name: Base Color
+        m_Overridden: 1
+      - m_Value: {x: 1.2391504, y: 3.0195003, z: 8.474191, w: 1}
+        m_Name: BaseColor
         m_Overridden: 1
     m_Uint:
       m_Array: []
@@ -357,11 +363,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_electricArc: {fileID: 1755686279170186892}
   m_target: {fileID: 0}
+  m_teamColour: 0
   m_positions:
   - {fileID: 3752147591551471677}
   - {fileID: 3180763132262823990}
   - {fileID: 4079380043093950244}
   - {fileID: 2499173059092071497}
+  m_arcColourIntensity: 0
 --- !u!1 &8185195988951152831
 GameObject:
   m_ObjectHideFlags: 0

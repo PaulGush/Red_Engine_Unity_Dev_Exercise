@@ -1,13 +1,12 @@
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace RedEngine
 {
     public class ConnectionManager : MonoBehaviour
     {
+        public static ConnectionManager Instance;
+        
         [SerializeField] private SceneManager m_sceneManager;
         [SerializeField] private GameObject m_connectionPrefab;
 
@@ -16,8 +15,23 @@ namespace RedEngine
         
         [SerializeField] private int m_blueConnectionCount = 0;
         [SerializeField] private int m_pinkConnectionCount = 0;
-        
-        private List<Connection> m_connections = new List<Connection>();
+
+        private Dictionary<Connection, float> m_blueConnectionDistances = new Dictionary<Connection, float>();
+        private Dictionary<Connection, float> m_pinkConnectionDistances = new Dictionary<Connection, float>();
+
+        private void Awake()
+        {
+            #region Singleton
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+            #endregion
+        }
 
         private void OnEnable()
         {
@@ -25,7 +39,12 @@ namespace RedEngine
             Puck.OnAnyStatusChanged += Puck_OnAnyStatusChanged;
             m_sceneManager.OnPucksInitialized += SceneManager_OnPucksInitialized;
         }
-        
+
+        private void Update()
+        {
+            UpdateConnectionArcIntensity();
+        }
+
         private void OnDisable()
         {
             Puck.OnAnyTeamColourChanged -= Puck_OnAnyTeamColourChanged;
@@ -101,11 +120,12 @@ namespace RedEngine
                     puckList[i].OutboundArcTargetSocket, 
                     puckList[temp].InboundArcTargetSocket.transform, 
                     puckList[i].OutboundArcTargetSocket.transform, 
-                    targetColor);
+                    targetColor,
+                    puckList[i].TeamColour);
             }
         }
 
-        private void SpawnConnection(LookAtTarget inbound, LookAtTarget outbound, Transform target, Transform parent, Color targetColor)
+        private void SpawnConnection(LookAtTarget inbound, LookAtTarget outbound, Transform target, Transform parent, Color targetColor, TeamColour teamColour)
         {
             inbound.SetTarget(parent);
             outbound.SetTarget(target);
@@ -118,8 +138,77 @@ namespace RedEngine
             
             connection.SetPositions(clone.transform, target);
             connection.SetArcColor(targetColor);
+            connection.SetTeamColour(teamColour);
             
-            m_connections.Add(connection);
+            if (targetColor == m_blueColour)
+            {
+                
+                m_blueConnectionDistances.Add(connection, Vector3.Distance(target.position, parent.position));
+            }
+            else if (targetColor == m_pinkColour)
+            {
+                m_pinkConnectionDistances.Add(connection, Vector3.Distance(target.position, parent.position));
+            }
+        }
+
+        public void UpdateConnectionDistance(Connection connection, float distance)
+        {
+            if (connection.GetTeamColour() == TeamColour.Blue)
+            {
+                if (m_blueConnectionDistances.ContainsKey(connection))
+                {
+                    m_blueConnectionDistances[connection] = distance;
+                }
+                else
+                {
+                    Debug.LogError("Key Value Pair not initialized.");
+                }
+            }
+            else
+            {
+                if (m_pinkConnectionDistances.ContainsKey(connection))
+                {
+                    m_pinkConnectionDistances[connection] = distance;
+                }
+                else
+                {
+                    Debug.LogError("Key Value Pair not initialized.");
+                }
+            }
+        }
+
+        private void UpdateConnectionArcIntensity()
+        {
+            float biggestDistance = 0;
+            Connection connectionToUpdate = null;
+            
+            foreach (var connection in m_blueConnectionDistances)
+            {
+                connection.Key.SetArcColourIntensity(0f);
+                
+                if (biggestDistance < connection.Value)
+                {
+                    biggestDistance = connection.Value;
+                    connectionToUpdate = connection.Key;
+                }
+            }
+            
+            connectionToUpdate?.SetArcColourIntensity(10f);
+            connectionToUpdate = null;
+            biggestDistance = 0;
+            
+            foreach (var connection in m_pinkConnectionDistances)
+            {
+                connection.Key.SetArcColourIntensity(0f);
+                
+                if (biggestDistance < connection.Value)
+                {
+                    biggestDistance = connection.Value;
+                    connectionToUpdate = connection.Key;
+                }
+            }
+            
+            connectionToUpdate?.SetArcColourIntensity(10f);
         }
 
         private void Puck_OnAnyTeamColourChanged(Puck puck)

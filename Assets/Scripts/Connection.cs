@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.VFX;
 
 namespace RedEngine
@@ -11,7 +8,11 @@ namespace RedEngine
         [Header("References")] 
         [SerializeField] private VisualEffect m_electricArc;
         [SerializeField] private Transform m_target;
+        [SerializeField] private TeamColour m_teamColour;
         [SerializeField] private Transform[] m_positions;
+        public float ArcColourIntensity = 0;
+        private Color m_originalColor;
+        
         public void SetPositions(Transform origin, Transform target)
         {
             transform.position = origin.position;
@@ -24,12 +25,34 @@ namespace RedEngine
         public void SetArcColor(Color newColor)
         {
             m_electricArc.SetVector4("BaseColor", newColor);
+            m_originalColor = newColor;
+        }
+
+        public void SetTeamColour(TeamColour newTeamColour)
+        {
+            m_teamColour = newTeamColour;
+        }
+
+        public TeamColour GetTeamColour() => m_teamColour;
+
+        public void SetArcColourIntensity(float newArcColourIntensity)
+        {
+            ArcColourIntensity = newArcColourIntensity;
+            
+            float factor = Mathf.Pow(2, newArcColourIntensity);
+            
+            Color currentColor = m_originalColor;
+            
+            Color newColor = new Color(currentColor.r * factor, currentColor.g * factor, currentColor.b * factor);
+
+            m_electricArc.SetVector4("BaseColor", newColor);
         }
 
         private void Update()
         {
             transform.LookAt(m_target);
             UpdatePositions();
+            ConnectionManager.Instance.UpdateConnectionDistance(this, Vector3.Distance(transform.position, m_target.position));
         }
 
         private void UpdatePositions()
