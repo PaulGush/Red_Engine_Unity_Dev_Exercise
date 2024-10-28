@@ -35,7 +35,6 @@ namespace RedEngine
 
         private void OnEnable()
         {
-            Puck.OnAnyTeamColourChanged += Puck_OnAnyTeamColourChanged;
             Puck.OnAnyStatusChanged += Puck_OnAnyStatusChanged;
             m_sceneManager.OnPucksInitialized += SceneManager_OnPucksInitialized;
         }
@@ -47,14 +46,12 @@ namespace RedEngine
 
         private void OnDisable()
         {
-            Puck.OnAnyTeamColourChanged -= Puck_OnAnyTeamColourChanged;
             Puck.OnAnyStatusChanged -= Puck_OnAnyStatusChanged;
             m_sceneManager.OnPucksInitialized -= SceneManager_OnPucksInitialized;
         }
 
         private void OnDestroy()
         {
-            Puck.OnAnyTeamColourChanged -= Puck_OnAnyTeamColourChanged;
             Puck.OnAnyStatusChanged -= Puck_OnAnyStatusChanged;
             m_sceneManager.OnPucksInitialized -= SceneManager_OnPucksInitialized;
         }
@@ -63,11 +60,7 @@ namespace RedEngine
         {
             #region BluePucks
 
-            if (TeamManager.Instance.BluePucks.Count <= 1)
-            {
-                m_blueConnectionCount = 0;
-            }
-            else if (TeamManager.Instance.BluePucks.Count == 2)
+            if (TeamManager.Instance.BluePucks.Count == 2)
             {
                 m_blueConnectionCount = 1;
             }
@@ -79,11 +72,7 @@ namespace RedEngine
             #endregion
             #region PinkPucks
             
-            if (TeamManager.Instance.PinkPucks.Count <= 1)
-            {
-                m_pinkConnectionCount = 0;
-            }
-            else if (TeamManager.Instance.PinkPucks.Count == 2)
+            if (TeamManager.Instance.PinkPucks.Count == 2)
             {
                 m_pinkConnectionCount = 1;
             }
@@ -142,7 +131,6 @@ namespace RedEngine
             
             if (targetColor == m_blueColour)
             {
-                
                 m_blueConnectionDistances.Add(connection, Vector3.Distance(target.position, parent.position));
             }
             else if (targetColor == m_pinkColour)
@@ -209,11 +197,6 @@ namespace RedEngine
             }
             
             connectionToUpdate?.SetArcColourIntensity(10f);
-        }
-
-        private void Puck_OnAnyTeamColourChanged(Puck puck)
-        {
-            CheckConnections();
         }
 
         private void Puck_OnAnyStatusChanged(Puck puck)

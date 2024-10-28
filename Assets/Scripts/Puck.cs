@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace RedEngine
@@ -14,11 +15,12 @@ namespace RedEngine
 		[SerializeField, ColorUsage(false, true)] private Color pinkColour;
 		
 		public TeamColour TeamColour { get; private set; }
-
+		private int teamColourIndex = -1;
+		
 		private static MaterialPropertyBlock _propertyBlock;
 		
-		public static Action<Puck> OnAnyTeamColourChanged;
 		public static Action<Puck> OnAnyStatusChanged;
+		
 		private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
 
 		private void Awake()
@@ -31,7 +33,10 @@ namespace RedEngine
 
 		private void OnEnable()
 		{
-			OnAnyStatusChanged?.Invoke(this);
+			if (teamColourIndex > -1)
+			{
+				OnAnyStatusChanged?.Invoke(this);
+			}
 		}
 		
 		private void OnDisable()
@@ -43,11 +48,13 @@ namespace RedEngine
 		{
 			OnAnyStatusChanged?.Invoke(this);
 		}
+		
 		public void SetTeamColour(TeamColour colour)
 		{
 			TeamColour = colour;
+			teamColourIndex = (int)colour;
 			
-			OnAnyTeamColourChanged?.Invoke(this);
+			OnAnyStatusChanged?.Invoke(this);
 			
 			SetPropertyBlock();
 		}

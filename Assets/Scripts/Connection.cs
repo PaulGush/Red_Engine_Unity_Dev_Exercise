@@ -10,7 +10,6 @@ namespace RedEngine
         [SerializeField] private Transform m_target;
         [SerializeField] private TeamColour m_teamColour;
         [SerializeField] private Transform[] m_positions;
-        public float ArcColourIntensity = 0;
         private Color m_originalColor;
         
         public void SetPositions(Transform origin, Transform target)
@@ -37,8 +36,6 @@ namespace RedEngine
 
         public void SetArcColourIntensity(float newArcColourIntensity)
         {
-            ArcColourIntensity = newArcColourIntensity;
-            
             float factor = Mathf.Pow(2, newArcColourIntensity);
             
             Color currentColor = m_originalColor;
@@ -55,6 +52,9 @@ namespace RedEngine
             ConnectionManager.Instance.UpdateConnectionDistance(this, Vector3.Distance(transform.position, m_target.position));
         }
 
+        /// <summary>
+        /// Updates middle positions of Bézier curve, outer positions are parented so do not need updating
+        /// </summary>
         private void UpdatePositions()
         {
             m_positions[1].transform.position = GetWorldPositionFromDistance(m_positions[0], m_positions[3], 0.33f);

@@ -27,53 +27,54 @@ namespace RedEngine
 
         private void OnEnable()
         {
-            Puck.OnAnyTeamColourChanged += Puck_OnAnyTeamColourChanged;
             Puck.OnAnyStatusChanged += Puck_OnAnyStatusChanged;
         }
         
         private void OnDisable()
         {
-            Puck.OnAnyTeamColourChanged -= Puck_OnAnyTeamColourChanged;
             Puck.OnAnyStatusChanged -= Puck_OnAnyStatusChanged;
         }
 
         private void OnDestroy()
         {
-            Puck.OnAnyTeamColourChanged -= Puck_OnAnyTeamColourChanged;
             Puck.OnAnyStatusChanged -= Puck_OnAnyStatusChanged;
-        }
-
-        private void Puck_OnAnyTeamColourChanged(Puck puck)
-        {
-            if (puck.TeamColour == TeamColour.Blue)
-            {
-                if (PinkPucks.Contains(puck))
-                {
-                    PinkPucks.Remove(puck);
-                }
-
-                BluePucks.Add(puck);
-            }
-            else
-            {
-                if (BluePucks.Contains(puck))
-                {
-                    BluePucks.Remove(puck);
-                }
-                
-                PinkPucks.Add(puck);
-            }
         }
 
         private void Puck_OnAnyStatusChanged(Puck puck)
         {
-            if (puck.TeamColour == TeamColour.Blue)
+            if (puck.enabled)
             {
-                BluePucks.Remove(puck);
+                if (puck.TeamColour == TeamColour.Blue)
+                {
+                    if (!BluePucks.Contains(puck))
+                    {
+                        BluePucks.Add(puck);
+                    }
+                }
+                else
+                {
+                    if (!PinkPucks.Contains(puck))
+                    {
+                        PinkPucks.Add(puck);
+                    }
+                }
             }
             else
             {
-                PinkPucks.Remove(puck);
+                if (puck.TeamColour == TeamColour.Blue)
+                {
+                    if (BluePucks.Contains(puck))
+                    {
+                        BluePucks.Remove(puck);
+                    }
+                }
+                else
+                {
+                    if (PinkPucks.Contains(puck))
+                    {
+                        PinkPucks.Remove(puck); 
+                    }
+                }
             }
         }
     }
