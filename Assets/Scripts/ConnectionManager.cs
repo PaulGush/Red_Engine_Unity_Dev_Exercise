@@ -41,7 +41,8 @@ namespace RedEngine
 
         private void Update()
         {
-            UpdateConnectionArcIntensity();
+            UpdateConnectionArcIntensity(m_blueConnectionDistances);
+            UpdateConnectionArcIntensity(m_pinkConnectionDistances);
         }
 
         private void OnDisable()
@@ -56,32 +57,18 @@ namespace RedEngine
             m_sceneManager.OnPucksInitialized -= SceneManager_OnPucksInitialized;
         }
         
-        private void CheckConnections()
+        private int CheckConnectionCount(List<Puck> puckList)
         {
-            #region BluePucks
-
-            if (TeamManager.Instance.BluePucks.Count == 2)
+            if (puckList.Count == 2)
             {
-                m_blueConnectionCount = 1;
+                return 1;
             }
-            else if (TeamManager.Instance.BluePucks.Count > 2)
+            else if (puckList.Count > 2)
             {
-                m_blueConnectionCount = TeamManager.Instance.BluePucks.Count;
-            }
-
-            #endregion
-            #region PinkPucks
-            
-            if (TeamManager.Instance.PinkPucks.Count == 2)
-            {
-                m_pinkConnectionCount = 1;
-            }
-            else if (TeamManager.Instance.PinkPucks.Count > 2)
-            {
-                m_pinkConnectionCount = TeamManager.Instance.PinkPucks.Count;
+                return puckList.Count;
             }
             
-            #endregion
+            return 0;
         }
 
         private void SpawnConnections(List<Puck> puckList, int connectionCount, Color targetColor)
@@ -165,27 +152,12 @@ namespace RedEngine
             }
         }
 
-        private void UpdateConnectionArcIntensity()
+        private void UpdateConnectionArcIntensity(Dictionary<Connection, float> connectionDistances)
         {
             float biggestDistance = 0;
             Connection connectionToUpdate = null;
             
-            foreach (var connection in m_blueConnectionDistances)
-            {
-                connection.Key.SetArcColourIntensity(0f);
-                
-                if (biggestDistance < connection.Value)
-                {
-                    biggestDistance = connection.Value;
-                    connectionToUpdate = connection.Key;
-                }
-            }
-            
-            connectionToUpdate?.SetArcColourIntensity(10f);
-            connectionToUpdate = null;
-            biggestDistance = 0;
-            
-            foreach (var connection in m_pinkConnectionDistances)
+            foreach (var connection in connectionDistances)
             {
                 connection.Key.SetArcColourIntensity(0f);
                 
@@ -201,7 +173,8 @@ namespace RedEngine
 
         private void Puck_OnAnyStatusChanged(Puck puck)
         {
-            CheckConnections();
+            m_blueConnectionCount = CheckConnectionCount(TeamManager.Instance.BluePucks);
+            m_pinkConnectionCount = CheckConnectionCount(TeamManager.Instance.PinkPucks);
         }
 
         private void SceneManager_OnPucksInitialized()
