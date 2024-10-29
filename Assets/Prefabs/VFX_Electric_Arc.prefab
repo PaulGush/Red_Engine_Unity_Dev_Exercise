@@ -322,6 +322,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2193102052507233029}
   - component: {fileID: 6721132453126232883}
+  - component: {fileID: 8297269071455899287}
   m_Layer: 0
   m_Name: VFX_Electric_Arc
   m_TagString: Untagged
@@ -361,6 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ada823ab8ddb644dab68423d5d3a606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_lookAtTarget: {fileID: 8297269071455899287}
   m_electricArc: {fileID: 1755686279170186892}
   m_target: {fileID: 0}
   m_teamColour: 0
@@ -369,6 +371,19 @@ MonoBehaviour:
   - {fileID: 3180763132262823990}
   - {fileID: 4079380043093950244}
   - {fileID: 2499173059092071497}
+--- !u!114 &8297269071455899287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4829592579645291913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a47eceaf7a341384dbf85126c4fb0cba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_target: {fileID: 0}
 --- !u!1 &8185195988951152831
 GameObject:
   m_ObjectHideFlags: 0

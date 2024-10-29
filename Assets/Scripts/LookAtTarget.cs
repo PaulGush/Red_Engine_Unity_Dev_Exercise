@@ -18,5 +18,7 @@ namespace RedEngine
         {
             m_target = target;
         }
+
+        public Transform GetTarget() => m_target;
     }
 }

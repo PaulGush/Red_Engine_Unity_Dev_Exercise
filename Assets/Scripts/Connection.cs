@@ -1,13 +1,15 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.VFX;
 
 namespace RedEngine
 {
+    [RequireComponent(typeof(LookAtTarget))]
     public class Connection : MonoBehaviour
     {
-        [Header("References")] 
+        [Header("References")]
+        [SerializeField] private LookAtTarget m_lookAtTarget;
         [SerializeField] private VisualEffect m_electricArc;
-        [SerializeField] private Transform m_target;
         [SerializeField] private TeamColour m_teamColour;
         [SerializeField] private Transform[] m_positions;
         private Color m_originalColor;
@@ -15,7 +17,7 @@ namespace RedEngine
         public void SetPositions(Transform origin, Transform target)
         {
             transform.position = origin.position;
-            m_target = target;
+            m_lookAtTarget.SetTarget(target);
             m_positions[3].position = target.position;
             m_positions[3].SetParent(target, true);
             m_positions[3].Translate(0,0,1);
@@ -47,13 +49,12 @@ namespace RedEngine
 
         private void Update()
         {
-            transform.LookAt(m_target);
             UpdatePositions();
-            ConnectionManager.Instance.UpdateConnectionDistance(this, Vector3.Distance(transform.position, m_target.position));
+            ConnectionManager.Instance.UpdateConnectionDistance(this, Vector3.Distance(transform.position, m_lookAtTarget.GetTarget().position));
         }
 
         /// <summary>
-        /// Updates middle positions of Bézier curve, outer positions are parented so do not need updating
+        /// Updates middle positions of Bezier curve, outer positions are parented so do not need updating
         /// </summary>
         private void UpdatePositions()
         {
