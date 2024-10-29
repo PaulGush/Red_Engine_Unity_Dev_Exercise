@@ -33,6 +33,7 @@ namespace RedEngine
 
 		private void OnEnable()
 		{
+			//Stops anyStatusChanged event being invoked before teamColour has been assigned 
 			if (teamColourIndex > -1)
 			{
 				OnAnyStatusChanged?.Invoke(this);

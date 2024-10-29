@@ -57,6 +57,11 @@ namespace RedEngine
             m_sceneManager.OnPucksInitialized -= SceneManager_OnPucksInitialized;
         }
         
+        /// <summary>
+        /// Determines how many arc connections are needed for the amount of pucks in the list
+        /// </summary>
+        /// <param name="puckList"></param>
+        /// <returns></returns>
         private int CheckConnectionCount(List<Puck> puckList)
         {
             if (puckList.Count == 2)
@@ -71,6 +76,13 @@ namespace RedEngine
             return 0;
         }
 
+        /// <summary>
+        /// Spawns arc connections between each puck in the list, ensuring objects are parented correctly and colours
+        /// are set correctly
+        /// </summary>
+        /// <param name="puckList"></param>
+        /// <param name="connectionCount"></param>
+        /// <param name="targetColor"></param>
         private void SpawnConnections(List<Puck> puckList, int connectionCount, Color targetColor)
         {
             if (connectionCount == 0)
@@ -126,6 +138,11 @@ namespace RedEngine
             }
         }
 
+        /// <summary>
+        /// Called from arc connection instances to update the largest connection in the list.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="distance"></param>
         public void UpdateConnectionDistance(Connection connection, float distance)
         {
             if (connection.GetTeamColour() == TeamColour.Blue)
