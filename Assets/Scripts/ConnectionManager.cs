@@ -16,8 +16,8 @@ namespace RedEngine
         [SerializeField] private int m_blueConnectionCount = 0;
         [SerializeField] private int m_pinkConnectionCount = 0;
 
-        private Dictionary<Connection, float> m_blueConnectionDistances = new Dictionary<Connection, float>();
-        private Dictionary<Connection, float> m_pinkConnectionDistances = new Dictionary<Connection, float>();
+        private readonly Dictionary<Connection, float> m_blueConnectionDistances = new();
+        private readonly Dictionary<Connection, float> m_pinkConnectionDistances = new();
 
         private void Awake()
         {
@@ -116,11 +116,11 @@ namespace RedEngine
             connection.SetArcColor(targetColor);
             connection.SetTeamColour(teamColour);
             
-            if (targetColor == m_blueColour)
+            if (teamColour == TeamColour.Blue)
             {
                 m_blueConnectionDistances.Add(connection, Vector3.Distance(target.position, parent.position));
             }
-            else if (targetColor == m_pinkColour)
+            else if (teamColour == TeamColour.Pink)
             {
                 m_pinkConnectionDistances.Add(connection, Vector3.Distance(target.position, parent.position));
             }
